@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Scissors, Mail, CheckCircle2, ArrowLeft } from "lucide-react";
+import { API_ENDPOINTS } from "@/lib/api-config";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
