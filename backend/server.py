@@ -181,7 +181,7 @@ async def get_status_checks():
 # ============= Authentication Routes =============
 @api_router.post("/auth/register")
 async def register_admin(request: AdminRegisterRequest):
-    """Register a new admin user"""
+    """Register a new admin user - DEV MODE: Auto-verified"""
     # Check if any admin already exists
     existing_admins = await db.admin_users.find_one({})
     if existing_admins:
@@ -192,15 +192,14 @@ async def register_admin(request: AdminRegisterRequest):
     if existing_user:
         raise HTTPException(status_code=400, detail="Email já cadastrado")
     
-    # Create new admin user
-    verification_token = generate_token()
+    # Create new admin user - AUTO VERIFIED for development
     hashed_password = hash_password(request.password)
     
     new_admin = {
         "email": request.email,
         "passwordHash": hashed_password,
-        "isVerified": False,
-        "verificationToken": verification_token,
+        "isVerified": True,  # AUTO VERIFIED - Development mode
+        "verificationToken": None,
         "resetToken": None,
         "resetTokenExpiry": None,
         "createdAt": datetime.utcnow().isoformat(),
@@ -209,58 +208,15 @@ async def register_admin(request: AdminRegisterRequest):
     
     await db.admin_users.insert_one(new_admin)
     
-    # Send verification email
-    verification_link = f"{FRONTEND_URL}/admin/verify-email?email={request.email}&token={verification_token}"
+    # Generate JWT token for immediate login
+    token = create_jwt_token(request.email)
     
-    html_content = f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <style>
-            body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
-            .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
-            .header {{ background-color: #d4a855; color: white; padding: 20px; text-align: center; }}
-            .content {{ background-color: #f9f9f9; padding: 30px; }}
-            .button {{ display: inline-block; padding: 12px 30px; background-color: #d4a855; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }}
-            .footer {{ text-align: center; padding: 20px; color: #666; font-size: 12px; }}
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="header">
-                <h1>🪒 VipBarbeiro</h1>
-            </div>
-            <div class="content">
-                <h2>Bem-vindo ao VipBarbeiro!</h2>
-                <p>Obrigado por se registrar como administrador.</p>
-                <p>Para ativar sua conta, clique no botão abaixo:</p>
-                <center>
-                    <a href="{verification_link}" class="button">Verificar Email</a>
-                </center>
-                <p>Ou copie e cole este link no seu navegador:</p>
-                <p style="word-break: break-all; color: #666; font-size: 12px;">{verification_link}</p>
-                <p>Este link expira em 24 horas.</p>
-            </div>
-            <div class="footer">
-                <p>Se você não solicitou este registro, ignore este email.</p>
-            </div>
-        </div>
-    </body>
-    </html>
-    """
-    
-    try:
-        await send_email_async(request.email, "Verifique seu email - VipBarbeiro", html_content)
-        return {
-            "message": "Registro realizado! Verifique seu email para ativar sua conta.",
-            "email": request.email
-        }
-    except Exception as e:
-        logger.error(f"Failed to send verification email: {str(e)}")
-        return {
-            "message": "Registro realizado, mas houve erro ao enviar email de verificação. Entre em contato com o suporte.",
-            "email": request.email
-        }
+    return {
+        "message": "Conta criada com sucesso! Você já pode fazer login.",
+        "email": request.email,
+        "token": token,
+        "auto_verified": True
+    }
 
 
 @api_router.post("/auth/verify-email")
