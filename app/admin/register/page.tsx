@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Scissors, Lock, Mail, CheckCircle2 } from "lucide-react";
+import { API_ENDPOINTS } from "@/lib/api-config";
 
 export default function AdminRegisterPage() {
   const router = useRouter();
@@ -36,7 +37,7 @@ export default function AdminRegisterPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8001/api/auth/register", {
+      const response = await fetch(API_ENDPOINTS.register, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
