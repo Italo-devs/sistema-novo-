@@ -1,0 +1,176 @@
+╔════════════════════════════════════════════════════════════╗
+║         🎯 CHECKLIST DE CONFIGURAÇÃO - VipBarbeiro         ║
+╚════════════════════════════════════════════════════════════╝
+
+Use esta lista para configurar o sistema passo a passo:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 ANTES DE COMEÇAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ Extrair o arquivo vipbarbeiro-completo.zip
+□ Ler o arquivo LEIA-ME.sh (executar: ./LEIA-ME.sh)
+□ Ler o arquivo README.md para documentação completa
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔑 PASSO 1: CONFIGURAR API DE EMAIL (OBRIGATÓRIO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ 1.1 Acessar https://resend.com
+□ 1.2 Criar conta gratuita (100 emails/dia)
+□ 1.3 Verificar seu email
+□ 1.4 Ir em "API Keys" no dashboard
+□ 1.5 Clicar em "Create API Key"
+□ 1.6 Dar um nome (ex: VipBarbeiro)
+□ 1.7 Copiar a chave (começa com "re_")
+
+□ 1.8 Configurar no projeto:
+      Opção A: ./setup.sh re_sua_chave_aqui
+      Opção B: Editar backend/.env manualmente
+
+□ 1.9 Reiniciar backend: sudo supervisorctl restart backend
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚀 PASSO 2: VERIFICAR SERVIÇOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ 2.1 Verificar status: sudo supervisorctl status
+      ✓ backend deve estar RUNNING
+      ✓ frontend deve estar RUNNING
+      ✓ mongodb deve estar RUNNING
+
+□ 2.2 Testar backend: curl http://localhost:8001/api/
+      Deve retornar: {"message":"VipBarbeiro API"}
+
+□ 2.3 Testar MongoDB: sudo supervisorctl status mongodb
+      Deve estar RUNNING
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👤 PASSO 3: CRIAR CONTA DE ADMINISTRADOR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ 3.1 Acessar: http://localhost:3000/admin
+□ 3.2 Sistema deve redirecionar para /admin/register
+□ 3.3 Preencher email e senha (mínimo 8 caracteres)
+□ 3.4 Clicar em "Criar Conta"
+□ 3.5 Verificar email (caixa de entrada e spam)
+□ 3.6 Clicar no link de verificação
+□ 3.7 Será redirecionado ao dashboard
+
+⚠️  IMPORTANTE: No plano gratuito da Resend, emails só vão
+    para o email verificado na sua conta Resend!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎨 PASSO 4: TESTAR SISTEMA DE CORES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ 4.1 No dashboard, ir em aba "Configurações"
+□ 4.2 Alterar "Cor Principal" (ex: azul, vermelho, verde)
+□ 4.3 Clicar em "Salvar Configurações"
+□ 4.4 Verificar que TODO o site mudou de cor:
+      ✓ Cabeçalho
+      ✓ Botões
+      ✓ Cards
+      ✓ Bordas
+
+□ 4.5 Testar também "Cor Secundária" e "Cor de Fundo"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⏰ PASSO 5: TESTAR FORMATAÇÃO DE TEMPO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ 5.1 Ir em aba "Serviços" no dashboard
+□ 5.2 Verificar que durações aparecem como:
+      ✓ "30 minutos" (não "30 min")
+      ✓ "1 hora" (se 60 minutos)
+      ✓ "1 hora e 15 minutos" (se 75 minutos)
+
+□ 5.3 Verificar também na página principal do site
+□ 5.4 Verificar no formulário de agendamento
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🕐 PASSO 6: TESTAR INTERFACE DE HORÁRIOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ 6.1 Dashboard → Aba "Serviços"
+□ 6.2 Clicar em "Novo Serviço"
+□ 6.3 Na seção "Horários Disponíveis":
+      ✓ Deve aparecer grid visual com botões
+      ✓ Horários selecionados ficam destacados
+      ✓ Contador mostra quantidade selecionada
+      ✓ Botões "Selecionar Todos" e "Limpar Todos" funcionam
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔐 PASSO 7: TESTAR RECUPERAÇÃO DE SENHA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ 7.1 Fazer logout: Botão "Sair" no dashboard
+□ 7.2 Na tela de login, clicar "Esqueceu sua senha?"
+□ 7.3 Digitar email cadastrado
+□ 7.4 Verificar email
+□ 7.5 Clicar no link de redefinição
+□ 7.6 Criar nova senha
+□ 7.7 Fazer login com nova senha
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ PASSO 8: FUNCIONALIDADES BÁSICAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ 8.1 Criar/editar serviços
+□ 8.2 Criar/editar barbeiros
+□ 8.3 Visualizar agendamentos
+□ 8.4 Mudar status de agendamentos
+□ 8.5 Ver dashboard financeiro
+□ 8.6 Acessar site público (http://localhost:3000)
+□ 8.7 Fazer agendamento como cliente
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎉 CONCLUSÃO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ Todas as alterações solicitadas foram implementadas
+□ Sistema funcionando corretamente
+□ Documentação lida e compreendida
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📞 PRECISA DE AJUDA?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+• Leia: README.md (documentação completa)
+• Consulte: INSTRUCOES_IMPORTANTES.md (detalhes técnicos)
+• Execute: ./LEIA-ME.sh (guia visual)
+• Veja: RESUMO_ALTERACOES.txt (todas as mudanças)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚨 PROBLEMAS COMUNS E SOLUÇÕES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Problema: Não recebo emails
+Solução: 
+  1. Verificar se API key está correta
+  2. No plano gratuito, só recebe no email verificado na Resend
+  3. Checar pasta de spam
+
+Problema: Backend não inicia
+Solução:
+  1. sudo supervisorctl restart backend
+  2. tail -f /var/log/supervisor/backend.err.log
+  3. Verificar se MongoDB está rodando
+
+Problema: Erro ao criar conta
+Solução:
+  1. Verificar se MongoDB está rodando
+  2. Verificar se backend está rodando
+  3. Verificar logs do backend
+
+Problema: Cores não mudam
+Solução:
+  1. Recarregar a página (F5 ou Ctrl+Shift+R)
+  2. Limpar cache do navegador
+  3. Verificar se salvou as configurações
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+╔════════════════════════════════════════════════════════════╗
+║         ✨ PRONTO PARA USAR! BOA SORTE! 🚀                ║
+╚════════════════════════════════════════════════════════════╝
