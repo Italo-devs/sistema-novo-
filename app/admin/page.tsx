@@ -1,47 +1,97 @@
 "use client";
 
 import React from "react"
-
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Scissors, Lock, User } from "lucide-react";
-import { adminLogin, checkAdminAuth } from "@/lib/store";
+import { Scissors, Lock, Mail } from "lucide-react";
+import { checkAdminAuth } from "@/lib/store";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [needsRegistration, setNeedsRegistration] = useState(false);
+  const [checkingAdmin, setCheckingAdmin] = useState(true);
 
   useEffect(() => {
+    // Check if already authenticated
     if (checkAdminAuth()) {
       router.push("/admin/dashboard");
+      return;
     }
+
+    // Check if admin exists
+    checkAdminExists();
   }, [router]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const checkAdminExists = async () => {
+    try {
+      const response = await fetch("http://localhost:8001/api/auth/check-admin-exists", {
+        method: "POST",
+      });
+      const data = await response.json();
+      setNeedsRegistration(!data.exists);
+    } catch (err) {
+      console.error("Error checking admin:", err);
+    } finally {
+      setCheckingAdmin(false);
+    }
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
 
     try {
-      const success = adminLogin(username, password);
-      if (success) {
-        router.push("/admin/dashboard");
-      } else {
-        setError("Usuario ou senha incorretos");
+      const response = await fetch("http://localhost:8001/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || "Erro ao fazer login");
       }
-    } catch {
-      setError("Erro ao fazer login. Tente novamente.");
+
+      // Save token
+      if (typeof window !== "undefined") {
+        localStorage.setItem("barbershop_admin_token", data.token);
+        localStorage.setItem("barbershop_admin_email", data.email);
+        localStorage.setItem("barbershop_admin_auth", "authenticated");
+      }
+
+      router.push("/admin/dashboard");
+    } catch (err: any) {
+      setError(err.message || "Erro ao fazer login. Tente novamente.");
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (checkingAdmin) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="text-center">
+          <Scissors className="h-12 w-12 text-primary mx-auto mb-4 animate-pulse" />
+          <p className="text-muted-foreground">Carregando...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (needsRegistration) {
+    router.push("/admin/register");
+    return null;
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -51,26 +101,27 @@ export default function AdminLoginPage() {
             <Scissors className="h-8 w-8 text-primary" />
           </div>
           <CardTitle className="text-2xl text-foreground">
-            Admin BarberPro
+            Admin VipBarbeiro
           </CardTitle>
           <CardDescription>
-            Acesse o painel administrativo para gerenciar agendamentos e servicos.
+            Acesse o painel administrativo com seu email e senha.
           </CardDescription>
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="username" className="text-foreground">
-                Usuario
+              <Label htmlFor="email" className="text-foreground">
+                Email
               </Label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  id="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="admin"
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="seu@email.com"
                   className="border-border bg-secondary/50 pl-10 text-foreground"
                   required
                 />
@@ -108,13 +159,13 @@ export default function AdminLoginPage() {
             </Button>
           </form>
 
-          <div className="mt-6 rounded-lg bg-secondary/30 p-4">
-            <p className="text-center text-xs text-muted-foreground">
-              Credenciais de demonstracao:
-              <br />
-              <span className="font-mono text-primary">admin</span> /{" "}
-              <span className="font-mono text-primary">admin123</span>
-            </p>
+          <div className="mt-4 text-center">
+            <button
+              onClick={() => router.push("/admin/forgot-password")}
+              className="text-sm text-primary hover:underline"
+            >
+              Esqueceu sua senha?
+            </button>
           </div>
         </CardContent>
       </Card>
