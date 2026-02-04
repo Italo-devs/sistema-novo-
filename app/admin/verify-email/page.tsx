@@ -29,7 +29,7 @@ function VerifyEmailContent() {
 
   const verifyEmail = async (email: string, token: string) => {
     try {
-      const response = await fetch("http://localhost:8001/api/auth/verify-email", {
+      const response = await fetch(API_ENDPOINTS.verifyEmail, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, token }),
