@@ -248,7 +248,7 @@ export function BookingForm() {
                       <div className="mt-2 flex items-center justify-between">
                         <span className="flex items-center gap-1 text-sm text-muted-foreground">
                           <Clock className="h-4 w-4" />
-                          {service.duration} min
+                          {formatDuration(service.duration)}
                         </span>
                         <span className="font-bold text-primary">
                           R$ {service.price.toFixed(2)}
