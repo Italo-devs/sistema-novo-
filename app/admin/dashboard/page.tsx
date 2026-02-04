@@ -1272,14 +1272,17 @@ export default function AdminDashboard() {
               </div>
             </div>
             <div>
-              <Label className="text-foreground mb-2 block">Horarios Disponiveis (07:00 - 00:00)</Label>
-              <div className="flex gap-2 mb-2">
+              <Label className="text-foreground mb-2 block">Horários Disponíveis (07:00 - 00:00)</Label>
+              <p className="text-xs text-muted-foreground mb-3">
+                Selecione os horários em que este serviço pode ser agendado
+              </p>
+              <div className="flex gap-2 mb-3">
                 <Button
                   type="button"
                   variant="outline"
                   size="sm"
                   onClick={() => setServiceAvailableTimes(allTimeSlots)}
-                  className="border-border text-foreground bg-transparent text-xs"
+                  className="border-border text-foreground bg-transparent text-xs flex-1"
                 >
                   Selecionar Todos
                 </Button>
@@ -1288,28 +1291,44 @@ export default function AdminDashboard() {
                   variant="outline"
                   size="sm"
                   onClick={() => setServiceAvailableTimes([])}
-                  className="border-border text-foreground bg-transparent text-xs"
+                  className="border-border text-foreground bg-transparent text-xs flex-1"
                 >
                   Limpar Todos
                 </Button>
               </div>
-              <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-1 max-h-60 overflow-y-auto p-2 border border-border rounded-lg">
-                {allTimeSlots.map((time) => (
-                  <label key={time} className="flex items-center gap-1 text-xs cursor-pointer">
-                    <Checkbox
-                      checked={serviceAvailableTimes.includes(time)}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          setServiceAvailableTimes([...serviceAvailableTimes, time].sort());
-                        } else {
-                          setServiceAvailableTimes(serviceAvailableTimes.filter(t => t !== time));
-                        }
-                      }}
-                      className="h-3 w-3"
-                    />
-                    <span className="text-foreground">{time}</span>
-                  </label>
-                ))}
+              <div className="border border-border rounded-lg bg-secondary/30 p-3 max-h-72 overflow-y-auto">
+                <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
+                  {allTimeSlots.map((time) => {
+                    const isSelected = serviceAvailableTimes.includes(time);
+                    return (
+                      <button
+                        key={time}
+                        type="button"
+                        onClick={() => {
+                          if (isSelected) {
+                            setServiceAvailableTimes(serviceAvailableTimes.filter(t => t !== time));
+                          } else {
+                            setServiceAvailableTimes([...serviceAvailableTimes, time].sort());
+                          }
+                        }}
+                        className={`
+                          px-2 py-1.5 text-xs rounded-md border-2 transition-all
+                          ${isSelected 
+                            ? 'border-primary bg-primary text-primary-foreground font-medium' 
+                            : 'border-border bg-background text-foreground hover:border-primary/50'
+                          }
+                        `}
+                      >
+                        {time}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="mt-3 pt-3 border-t border-border">
+                  <p className="text-xs text-muted-foreground">
+                    {serviceAvailableTimes.length} de {allTimeSlots.length} horários selecionados
+                  </p>
+                </div>
               </div>
             </div>
           </div>
