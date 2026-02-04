@@ -22,7 +22,7 @@ export default function ForgotPasswordPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8001/api/auth/forgot-password", {
+      const response = await fetch(API_ENDPOINTS.forgotPassword, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
