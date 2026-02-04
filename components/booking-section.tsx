@@ -19,6 +19,7 @@ import type { Service, Barber } from "@/lib/types";
 import { Check, Clock, User, Calendar as CalendarIcon, Scissors, ArrowRight, Phone } from "lucide-react";
 import { ptBR } from "date-fns/locale";
 import { format } from "date-fns";
+import { formatDuration } from "@/lib/time-utils";
 
 export function BookingSection() {
   const [step, setStep] = useState(1);
