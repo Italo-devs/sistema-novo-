@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Scissors, Lock, Mail } from "lucide-react";
 import { checkAdminAuth } from "@/lib/store";
+import { API_ENDPOINTS } from "@/lib/api-config";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -32,7 +33,7 @@ export default function AdminLoginPage() {
 
   const checkAdminExists = async () => {
     try {
-      const response = await fetch("http://localhost:8001/api/auth/check-admin-exists", {
+      const response = await fetch(API_ENDPOINTS.checkAdminExists, {
         method: "POST",
       });
       const data = await response.json();
@@ -50,7 +51,7 @@ export default function AdminLoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8001/api/auth/login", {
+      const response = await fetch(API_ENDPOINTS.login, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
