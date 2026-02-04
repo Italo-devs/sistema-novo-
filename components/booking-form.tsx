@@ -20,6 +20,7 @@ import type { Service, Barber } from "@/lib/types";
 import { Check, Clock, User, Calendar as CalendarIcon, ArrowLeft, ArrowRight } from "lucide-react";
 import { ptBR } from "date-fns/locale";
 import { format } from "date-fns";
+import { formatDuration } from "@/lib/time-utils";
 
 type Step = "service" | "barber" | "datetime" | "contact" | "confirm";
 
