@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { getServices } from "@/lib/store";
 import type { Service } from "@/lib/types";
 import { Clock, Scissors, Sparkles, Flame } from "lucide-react";
+import { formatDuration } from "@/lib/time-utils";
 
 export function ServicesSection() {
   const [services, setServices] = useState<Service[]>([]);
