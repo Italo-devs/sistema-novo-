@@ -75,7 +75,7 @@ export function ServicesSection() {
                 <div className="flex items-center justify-between pt-4 border-t border-border/50">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Clock className="h-4 w-4 text-primary" />
-                    <span>{service.duration} minutos</span>
+                    <span>{formatDuration(service.duration)}</span>
                   </div>
                   <Badge 
                     variant="outline" 
