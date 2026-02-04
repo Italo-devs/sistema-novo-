@@ -48,7 +48,17 @@ export default function AdminRegisterPage() {
         throw new Error(data.detail || "Erro ao criar conta");
       }
 
-      setSuccess(true);
+      // Development mode: auto-verified, login directly
+      if (data.auto_verified && data.token) {
+        if (typeof window !== "undefined") {
+          localStorage.setItem("barbershop_admin_token", data.token);
+          localStorage.setItem("barbershop_admin_email", data.email);
+          localStorage.setItem("barbershop_admin_auth", "authenticated");
+        }
+        router.push("/admin/dashboard");
+      } else {
+        setSuccess(true);
+      }
     } catch (err: any) {
       setError(err.message || "Erro ao criar conta. Tente novamente.");
     } finally {
